@@ -1,0 +1,60 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        architecture: x64
+    - name: Build test executables from scripts with launchers
+      run: |
+        mkdir test
+        python -c "import sys; print(sys.executable)"
+        python -m venv env
+        env\Scripts\pip install distlib psutil
+        python make_launcher_tests.py
+        python make_launcher_tests.py -s "" -p ENV_PYTHON
+        dir test
+      shell: cmd
+      env:
+        PY_DEBUG: 1
+    - name: Run test exeutables using Python - console, direct
+      run: |
+        env\Scripts\python run_launcher_tests.py -s "" -c
+      shell: cmd
+      env:
+        PY_DEBUG: 1
+    - name: Run test exeutables using Python - windowed, direct
+      run: |
+        env\Scripts\python run_launcher_tests.py -s "" -w
+      shell: cmd
+      env:
+        PY_DEBUG: 1
+    - name: Run test exeutables using Python - console, venv
+      run: |
+        env\Scripts\python run_launcher_tests.py -c
+      shell: cmd
+      env:
+        PY_DEBUG: 1
+    - name: Run test exeutables using Python - windowed, venv
+      run: |
+        env\Scripts\python run_launcher_tests.py -w
+      shell: cmd
+      env:
+        PY_DEBUG: 1
