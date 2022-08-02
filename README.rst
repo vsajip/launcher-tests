@@ -38,7 +38,7 @@ examine subprocess trees.
 The `make_launcher_tests.py` script is used to make the test executables in the `test`
 subdirectory. Invocation options are:
 
-.. code-block:: console
+```
     $ python make_launcher_tests.py -h
     usage: make_launcher_tests [-h] [-p PYTHON] [-o OUTDIR] [-s SUFFIX]
 
@@ -50,10 +50,10 @@ subdirectory. Invocation options are:
                             Write files here (default: test)
       -s SUFFIX, --suffix SUFFIX
                             Suffix for executables (default: v)
-
+```
 The `run_launcher_tests.py` script is used to run the tests. Invocation options are:
 
-.. code-block:: console
+```
     $ python run_launcher_tests.py -h
     usage: run_launcher_tests [-h] [--delay DELAY] [--console] [--windowed] [-s SUFFIX]
 
@@ -65,3 +65,4 @@ The `run_launcher_tests.py` script is used to run the tests. Invocation options 
       --windowed, -w        Test windowed executable only (default: False)
       -s SUFFIX, --suffix SUFFIX
                             Suffix for executables (default: v)
+```
