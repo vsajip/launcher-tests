@@ -47,8 +47,10 @@ ctypes.windll.user32.MessageBoxW(0, s, 'System Info', MB_OK)
 # Use a fixed time to have a reproducible archive as far as possible
 ZIP_TIMESTAMP = datetime.date(2000, 1, 1).timetuple()[:6]
 
-LAUNCHER_LOCATION = r'env\Lib\site-packages\distlib'
-PYTHON_LOCATION = os.path.abspath(r'env\Scripts\python.exe').lower()
+# Use either the version from the env, or the version from the cloned repo
+# LAUNCHER_LOCATION = r'env\Lib\site-packages\distlib'
+LAUNCHER_LOCATION = r'distlib\distlib'
+PYTHON_LOCATION = r'env\Scripts\python.exe'
 
 def main():
     fn = os.path.basename(__file__)
@@ -57,6 +59,8 @@ def main():
     parser = argparse.ArgumentParser(formatter_class=adhf, prog=fn)
     parser.add_argument('-p', '--python', default=PYTHON_LOCATION,
                         help='Use this in the shebang - must contain the text "python.exe"')
+    parser.add_argument('-l', '--launcher', default=LAUNCHER_LOCATION,
+                        help='Location of launchers')
     parser.add_argument('-o', '--outdir', default='test',
                         help='Write files here')
     parser.add_argument('-s', '--suffix', default='v',
@@ -78,7 +82,8 @@ def main():
         d = os.environ['pythonLocation']
         assert d
         options.python = os.path.join(d, 'python.exe')
-    options.shebang = options.python.replace('\'', '"')
+    pyloc = os.path.abspath(options.python).lower()
+    options.shebang = pyloc.replace('\'', '"')
     shebang = ('#!%s\n' % options.shebang).encode('utf-8')
     wshebang = ('#!%s\n' % options.shebang.replace('python.exe', 'pythonw.exe')).encode('utf-8')
     fn = os.path.join(LAUNCHER_LOCATION, 't64.exe')

@@ -32,8 +32,8 @@ executables are named as follows:
 +--------------+-------------------------------------------------------------------+
 
 The script to make the tests - `make_launcher_tests.py` - needs distlib to get access to
-its launchers. The script to run the tests - `run_launcher_tests.py` - needs `psutil` to
-examine subprocess trees.
+its launchers from the latest release. The script to run the tests -
+`run_launcher_tests.py` - needs `psutil` to examine subprocess trees.
 
 The `make_launcher_tests.py` script is used to make the test executables in the `test`
 subdirectory. Invocation options are:
@@ -42,12 +42,14 @@ subdirectory. Invocation options are:
 
     <pre>
     $ python make_launcher_tests.py -h
-    usage: make_launcher_tests [-h] [-p PYTHON] [-o OUTDIR] [-s SUFFIX]
+    usage: make_launcher_tests [-h] [-p PYTHON] [-l LAUNCHER] [-o OUTDIR] [-s SUFFIX]
 
     optional arguments:
       -h, --help            show this help message and exit
       -p PYTHON, --python PYTHON
-                            Use this in the shebang - must contain the text "python.exe" (default: env\scripts\python.exe)
+                            Use this in the shebang - must contain the text "python.exe" (default: env\Scripts\python.exe)
+      -l LAUNCHER, --launcher LAUNCHER
+                            Location of launchers (default: distlib\distlib)
       -o OUTDIR, --outdir OUTDIR
                             Write files here (default: test)
       -s SUFFIX, --suffix SUFFIX
