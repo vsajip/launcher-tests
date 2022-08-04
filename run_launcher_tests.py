@@ -31,17 +31,16 @@ def dump_process_tree(pp, descendants, level=1):
 def test_executable(options, cmd, descr):
     message('Running %s ...' % descr)
     p = subprocess.Popen(cmd)
-    time.sleep(0.5)
+    time.sleep(options.short_delay)
     pp = psutil.Process(p.pid)
     message('Process tree:')
     descendants = []
     dump_process_tree(pp, descendants)
     message('Waiting %s secs ...' % options.delay)
-    time.sleep(options.delay - 0.5)
+    time.sleep(options.delay - options.short_delay)
     message('Trying to stop %s with pid %s ...' % (descr, p.pid))
     p.kill()
-    message('Waiting 500 msecs ...')
-    time.sleep(0.5)
+    time.sleep(options.short_delay)
     rc = p.poll()
     if rc is None:
         message('The %s is still running' % descr)
@@ -69,7 +68,8 @@ def main():
     ap = argparse.ArgumentParser(formatter_class=adhf, prog=fn)
     aa = ap.add_argument
     # aa('input', metavar='INPUT', help='File to process')
-    aa('--delay', '-d', type=int, default=5, help='Delay before trying to stop')
+    aa('--delay', '-d', type=float, default=5, help='Delay before trying to stop')
+    aa('--short-delay', type=float, default=0.8, help='Delay after invoking child process start/stop')
     aa('--console', '-c', default=False, action='store_true',
        help='Test console executable only')
     aa('--windowed', '-w', default=False, action='store_true',
@@ -80,6 +80,8 @@ def main():
         options.all = True
     else:
         options.all = False
+    if options.delay <= options.short_delay:
+        options.delay = options.short_delay + 1
     if options.console or options.all:
         cmd = [os.path.join('test', 'test%s.exe' % options.suffix), '10']
         test_executable(options, cmd, 'console executable')
